@@ -23,7 +23,7 @@ app.get('/todos', function(req, res){
 app.get('/todos/:id', function(req, res){
 
 	var todoId = req.params.id;
-	var matchedobj = _.findwhere(todos,{id: todoID});
+	var matchedobj = _.findWhere(todos,{id: todoID});
 
 	 if(matchedobj){
 	 	res.json(matchedobj);
