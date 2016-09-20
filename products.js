@@ -1,6 +1,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
+
 var _= require('underscore');
+
 var app1 = express();
 var PORT = process.env.PORT || 8080;
 var productNextId = 1;
@@ -22,7 +24,8 @@ app1.get('/products', function(req, res){
 
 app1.get('/products/:id', function(req, res){
 
-	var productId = req.params.id;
+	var productId =	 parseInt(req.params.id);
+
 	var  matchedProduct = _.findWhere(products, {id : productId});
 
 	if(matchedProduct){
@@ -44,8 +47,11 @@ app1.post('/products', function(req, res){
 	 
 	 }
 
-	 body.description = body.description.trim();
-	 body.id = productNextId++;
+	body.description = body.description.trim();
+	body.productName = body.productName.trim();
+	body.price = body.price.trim();
+	body.quantity = body.quantity.trim();
+	body.id = productNextId++;
 	products.push(body);
 	res.json(body);
 });
@@ -75,14 +81,14 @@ app1.put('/products/:id', function(req, res){
 	var validAttributes = {};
 
 	if(!matchedProduct) {
-		return res.status(400).send();
+		return res.status(404).send();
 	}
 
 
 	if(body.hasOwnProperty('productName') && _.isString(body.productName)){
 		validAttributes.productName = body.productName;
 	} else if(body.hasOwnProperty('productName')){
-		return res.status(400).send();
+		return res.status(404).send();
 	} 
 
 	
@@ -90,26 +96,26 @@ app1.put('/products/:id', function(req, res){
 		validAttributes.description = body.description;
 
 	} else if(body.hasOwnProperty('description')){
-		return res.status(400).send();
+		return res.status(404).send();
 	}
 
 
 	if(body.hasOwnProperty('price') && body.price.trim().length > 0){
 		validAttributes.price = body.price;
 	} else if(body.hasOwnProperty('price')){
-		return res.status(400).send();
+		return res.status(404).send();
 	} 
 
 	if(body.hasOwnProperty('quantity') && body.quantity.trim().length > 0){
 		validAttributes.quantity = body.quantity;
 	} else if(body.hasOwnProperty('quantity')){
-		return res.status(400).send();
+		return res.status(404).send();
 	} 
 
 	if(body.hasOwnProperty('categoryId') && body.categoryId.trim().length > 0){
 		validAttributes.categoryId = body.categoryId;
 	} else if(body.hasOwnProperty('categoryId')){
-		return res.status(400).send();
+		return res.status(404).send();
 	} 
 
 	_.extend(matchedProduct,validAttributes);
